@@ -1,0 +1,11 @@
+.round{
+    width: 20px;
+       height: 20px;
+       background-color: #999a9e;
+       border-radius: 50%;
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       color: white;
+       font-size: 10px;
+   }

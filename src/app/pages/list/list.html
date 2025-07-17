@@ -1,18 +1,52 @@
 <div class="container">
-    <div class="container-table">
     <div class="card">
+    <div class="container-table">
+        <div class="toolBarTable">
+            <div>
+              <input
+                class="input"
+                placeholder="Search..."
+                type="text"
+                (keyup)="search()"
+                [(ngModel)]="dataFilter"
+              />
+            </div>
+            <div>
+              <button
+                class="button bg-primary text-color"
+                type="button"
+              >
+                Agregar
+              </button>
+            </div>
+          </div>
         <table class="table">
             <thead class="thead">
-                <td>Logo</td>
-                <td>Nombre del producto</td>
-                <td>Descripcion</td>
-                <td>Fecha de liberacion</td>
-                <td>Fecha de reestruccturacion</td>
-                <td></td>
+                <th>Logo </th>
+                <th>Nombre del producto</th>
+                <th>
+                    <div class="icon-position">
+                        <span>Descripción</span>
+                        <c-icon [avatar]="'i'" style="margin-left: 6px;"/>
+                    </div>
+                </th>
+                <th>
+                    <div class="icon-position">
+                    Fecha de liberación
+                    <c-icon [avatar]="'i'" style="margin-left: 6px;"/>
+                </div>
+                </th>
+                <th>
+                    <div class="icon-position">
+                    Fecha de reestructuración
+                    <c-icon [avatar]="'i'" style="margin-left: 6px;"/>
+                </div>
+                </th>
+                <th>Acciones</th>
             </thead>
             <tbody>
                 
-                @for( product of lstProductos() ;track product.id){
+                @for( product of cpyProducts() ;track product.id){
                     <tr>
                         <td> 
                             
@@ -23,12 +57,34 @@
                         <td>{{product.description}}</td>
                         <td>{{product.date_release}}</td>
                         <td>{{product.date_revision}}</td>
-                        <td></td>
+                        <td>eliminar</td>
                         
                     </tr>
+                }@empty {
+                    <td [colSpan]="6">
+                        
+                        <h1>No se encontraton registros</h1>
+                    </td>
                 }
             </tbody>
         </table>
+
+        <div class="toolBarTable">
+            <div class="footerTable">
+              <h4 class="text-color">{{ cpyProducts().length }} Resultado</h4>
+            </div>
+            <div>
+              <select
+                class="input input-select"
+                [(ngModel)]="viewData"
+                (change)="selectView()"
+              >
+                <option>5</option>
+                <option>10</option>
+                <option>20</option>
+              </select>
+            </div>
+          </div>
         </div>
     </div>
 
