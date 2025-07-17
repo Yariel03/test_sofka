@@ -1,7 +1,6 @@
 .container{
   width: 100%;
   padding-top: 60px;
-  background-color: #f5f5f6;
   padding-bottom: 60px;
  
 }
@@ -56,6 +55,8 @@ white-space: nowrap;
   justify-content: space-between;
   align-items: center;
   margin: auto;
+  max-width: 1200px;
+
 }
 
 
@@ -90,11 +91,22 @@ white-space: nowrap;
   background-color: #d40606;
    
   }
+  .toolBarFooterTable {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
 
 }
 
 /* Media query para móviles */
 @media (max-width: 480px) {
+
+  .card{
+  background-color: #06d455;
+
+  }
   .container {
     padding-top: 50px;
     padding-bottom: 50px;
