@@ -1,25 +1,26 @@
 <div class="container">
+    <div class="toolBarTable">
+        <div>
+          <input
+            class="input"
+            placeholder="Search..."
+            type="text"
+            (keyup)="search()"
+            [(ngModel)]="dataFilter"
+          />
+        </div>
+        <div>
+          <button
+            class="button bg-primary text-color"
+            type="button"
+          >
+            Agregar
+          </button>
+        </div>
+      </div>
     <div class="card">
     <div class="container-table">
-        <div class="toolBarTable">
-            <div>
-              <input
-                class="input"
-                placeholder="Search..."
-                type="text"
-                (keyup)="search()"
-                [(ngModel)]="dataFilter"
-              />
-            </div>
-            <div>
-              <button
-                class="button bg-primary text-color"
-                type="button"
-              >
-                Agregar
-              </button>
-            </div>
-          </div>
+
         <table class="table">
             <thead class="thead">
                 <th>Logo </th>
@@ -57,7 +58,7 @@
                         <td>{{product.description}}</td>
                         <td>{{product.date_release}}</td>
                         <td>{{product.date_revision}}</td>
-                        <td>eliminar</td>
+                        <td> <div class="button vertical">•••</div></td>
                         
                     </tr>
                 }@empty {
@@ -68,16 +69,17 @@
                 }
             </tbody>
         </table>
+    </div>
 
-        <div class="toolBarTable">
+        <div class="toolBarFooterTable">
             <div class="footerTable">
-              <h4 class="text-color">{{ cpyProducts().length }} Resultado</h4>
+              <h4 class="text-color">{{total() }} {{  total()>1?'Resultados':'Resultado' }} </h4>
             </div>
             <div>
               <select
                 class="input input-select"
                 [(ngModel)]="viewData"
-                (change)="selectView()"
+              
               >
                 <option>5</option>
                 <option>10</option>
@@ -85,7 +87,6 @@
               </select>
             </div>
           </div>
-        </div>
     </div>
 
 </div>
