@@ -1,29 +1,40 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CAvatar } from './c-avatar';
 import { Utils } from '../../utils/utils';
 
-describe('CAvatar (Jest)', () => {
+// Mock de Utils
+jest.mock('../../utils/utils', () => ({
+  Utils: {
+    CapitalLeters: jest.fn((value: string) => value.toUpperCase()),
+  },
+}));
+
+describe('CAvatar', () => {
   let component: CAvatar;
+  let fixture: ComponentFixture<CAvatar>;
 
-  beforeEach(() => {
-    component = new CAvatar();
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(CAvatar);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  it('debe asignar el resultado de Utils.CapitalLeters a avatarUrl si avatar tiene valor', () => {
-    const spy = jest.spyOn(Utils, 'CapitalLeters').mockReturnValue('AB');
-    component.avatar = 'algo-bueno';
-    expect(spy).toHaveBeenCalledWith('algo-bueno');
-    expect(component.avatarUrl).toBe('AB');
-    spy.mockRestore();
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
   });
 
-  it('debe asignar "NA" a avatarUrl si avatar es vacío', () => {
+  it('should set avatarUrl to capitalized value when avatar input is provided', () => {
+    component.avatar = 'test avatar';
+    expect(Utils.CapitalLeters).toHaveBeenCalledWith('test avatar');
+    expect(component.avatarUrl).toBe('TEST AVATAR');
+  });
+
+  it('should set avatarUrl to "NA" when avatar input is empty', () => {
     component.avatar = '';
-    expect(component.avatarUrl).toBe('NA');
-  });
-
-  it('debe asignar "NA" a avatarUrl si avatar es null', () => {
-    // @ts-ignore
-    component.avatar = null;
     expect(component.avatarUrl).toBe('NA');
   });
 });

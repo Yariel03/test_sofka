@@ -4,6 +4,12 @@
         <div class="head">
             <h1 class="text-color">Formulario de Registro</h1>
           </div>
+          @if(isSave()){
+<div style="width: 100%;display: flex; justify-content: center;">
+
+  <div class="skeleton"></div>
+</div>
+          }
           <hr />
 
           <form [formGroup]="frmProduct" (submit)="save()">
@@ -23,10 +29,12 @@
                 @if(frmProduct.get('id')?.errors?.['required']){
                 <div class="error">Este campo es requerido</div>
                 } @if(frmProduct.get('id')?.errors?.['minlength']){
-                <div class="error">minimo 3 caracters</div>
+                <div class="error">minimo 3 caracteres</div>
                 } @if(frmProduct.get('id')?.errors?.['maxlength']){
-                <div class="error">maximo 10 caracters</div>
-                } @if(isExist()){
+                <div class="error">maximo 10 caracteres</div>
+                } @if(frmProduct.get('id')?.errors?.['pattern']){
+                  <div class="error">No se permite inicar con espacios en blanco</div>
+                  }  @if(isExist()){
                 <div class="error">Este ID ya existe</div>
                 }
               </div>
@@ -44,9 +52,9 @@
                 @if(frmProduct.get('name')?.errors?.['required']){
                 <div class="error">Este campo es requerido</div>
                 } @if(frmProduct.get('name')?.errors?.['minlength']){
-                <div class="error">minimo 3 caracters</div>
+                <div class="error">minimo 5 caracteres</div>
                 } @if(frmProduct.get('name')?.errors?.['maxlength']){
-                <div class="error">maximo 100 caracters</div>
+                <div class="error">maximo 100 caracteres</div>
                 }
               </div>
               <div>
@@ -60,9 +68,13 @@
                   formControlName="description"
                   type="text"
                 />
-                @if(frmProduct.get('description')?.invalid){
+                @if(frmProduct.get('description')?.errors?.['required']){
                 <div class="error">Este campo es requerido</div>
-                }
+                }@if(frmProduct.get('description')?.errors?.['minlength']){
+                  <div class="error">minimo 10 caracteres</div>
+                  } @if(frmProduct.get('description')?.errors?.['maxlength']){
+                  <div class="error">maximo 200 caracteres</div>
+                  }
               </div>
               <div>
                 <label for="">Logo</label>
@@ -91,8 +103,12 @@
                   type="date"
                   (change)="dateValidation()"
                 />
-                @if(frmProduct.get('date_release')?.invalid){
+                @if(frmProduct.get('date_release')?.errors?.['required']){
                 <div class="error">Este campo es requerido</div>
+              
+                }
+                @if(frmProduct.errors?.['dateNotNow']){
+                  <div class="error">La fecha no puede ser anterior al dia de hoy</div>
                 }
               </div>
               <div>

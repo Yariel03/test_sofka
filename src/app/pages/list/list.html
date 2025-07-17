@@ -21,7 +21,13 @@
       </div>
     <div class="card">
     <div class="container-table">
+   @if(isDelete()){
+    <div style="width: 100%;display: flex; justify-content: center;">
 
+     <div class="skeleton">
+    </div>
+  </div>
+  }
         <table class="table">
             <thead class="thead">
                 <th>Logo </th>
@@ -49,26 +55,45 @@
             <tbody>
                 
                 @for( product of cpyProducts() ;track product.id){
+
+                 
                     <tr>
                         <td> 
-                            
                             <c-avatar class="avatar" [avatar]="product.logo" />
+                        </td>
+                          <td>{{product.name}}</td>
+                          <td>{{product.description}}</td>
+                          <td>{{product.date_release}}</td>
+                          <td>{{product.date_revision}}</td>
+                          <td> <app-c-dropdown (isDelete)="delete($event,product)" [producto]="product" /> 
+                          </td>
+                          
+                        </tr>
+                      }
+                      @empty {
+                        
+                        @if(isLoading()){
+                          <tr>
+                            @for(skeleton of [1,1,1,1,1,1];track skeleton){
+                              <td>
+                                <div class="skeleton">
+                                </div>
+                            }
+                          </tr>
+
+                          <tr>
+                            @for(skeleton of [1,1,1,1,1,1];track skeleton){
+                              <td>
+                                <div class="skeleton">
+                                </div>
+                            }
+                          </tr>
+                        }@else{
+                          <td [colSpan]="6">
                             
-                        </td>
-                        <td>{{product.name}}</td>
-                        <td>{{product.description}}</td>
-                        <td>{{product.date_release}}</td>
-                        <td>{{product.date_revision}}</td>
-                        <td> <app-c-dropdown (isDelete)="delete($event,product)" [producto]="product" /> 
-                            <!-- <div class="button vertical">•••</div> -->
-                        </td>
-                        
-                    </tr>
-                }@empty {
-                    <td [colSpan]="6">
-                        
-                        <h1>No se encontraton registros</h1>
-                    </td>
+                            <h1>No se encontraton registros</h1>
+                          </td>
+                        }
                 }
             </tbody>
         </table>
@@ -76,7 +101,7 @@
 
         <div class="toolBarFooterTable">
             <div class="footerTable">
-              <h4 class="text-color">{{total() }} {{  total()>1?'Resultados':'Resultado' }} </h4>
+              <h4 class="text-color">{{total() }} {{  total()==1?'Resultado':'Resultados' }} </h4>
             </div>
             <div>
               <select

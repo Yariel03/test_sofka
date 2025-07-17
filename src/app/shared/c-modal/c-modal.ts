@@ -28,6 +28,8 @@ export class CModal {
 
   close() {
     this.isVisible = false;
+    this.isDelete.emit(false);
+
   }
 
   delete() {

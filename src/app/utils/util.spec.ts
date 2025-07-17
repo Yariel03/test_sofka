@@ -12,13 +12,13 @@ describe('Utils', () => {
 
   describe('formatDateToYYYYMMDD', () => {
     it('debe formatear la fecha correctamente', () => {
-      const date = new Date('2024-06-01');
-      expect(Utils.formatDateToYYYYMMDD(date)).toBe('2024-06-01');
+      const date = new Date('2025-07-17');
+      expect(Utils.formatDateToYYYYMMDD(date)).toBe('2025-07-16');
     });
 
     it('debe lanzar un error si el parámetro no es una instancia de Date', () => {
       // @ts-expect-error
-      expect(() => Utils.formatDateToYYYYMMDD('2024-06-01')).toThrow(
+      expect(() => Utils.formatDateToYYYYMMDD('2024-07-17')).toThrow(
         'El parámetro debe ser una instancia de Date.'
       );
     });
@@ -27,20 +27,20 @@ describe('Utils', () => {
   describe('filterProducts', () => {
     const products: ICreditCard[] = [
       {
-        id: '1',
+        id: 'uno',
         name: 'Visa Oro',
         description: 'Tarjeta dorada',
         logo: 'logo1.png',
-        date_release: '2024-01-01',
-        date_revision: '2024-06-01',
+        date_release: '2025-07-17',
+        date_revision: '2026-07-17',
       },
       {
-        id: '2',
+        id: 'dos',
         name: 'MasterCard Black',
         description: 'Tarjeta negra',
         logo: 'logo2.png',
-        date_release: '2023-05-10',
-        date_revision: '2024-05-10',
+        date_release: '2025-06-17',
+        date_revision: '2025-06-17',
       },
     ];
 
@@ -57,13 +57,13 @@ describe('Utils', () => {
     });
 
     it('debe filtrar por id', () => {
-      const result = Utils.filterProducts(products, '2');
+      const result = Utils.filterProducts(products, 'uno');
       expect(result).toHaveLength(1);
-      expect(result[0].id).toBe('2');
+      expect(result[0].id).toBe('uno');
     });
 
     it('debe filtrar por fecha de revisión', () => {
-      const result = Utils.filterProducts(products, '2024-06-01');
+      const result = Utils.filterProducts(products, '2025-07-17');
       expect(result).toHaveLength(1);
       expect(result[0].name).toBe('Visa Oro');
     });

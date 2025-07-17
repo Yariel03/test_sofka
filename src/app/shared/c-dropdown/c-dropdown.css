@@ -20,7 +20,8 @@
   .dropdown-content {
     display: none;
     position: absolute;
-    top:-6px;
+    top:-0px;
+    left: -150px;
     background-color: #f1f1f1;
     min-width: 160px;
     box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
@@ -46,3 +47,7 @@
   }
 
   a{cursor: pointer;}
+
+  .vertical {
+    transform: rotate(90deg);
+  }

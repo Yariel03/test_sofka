@@ -13,6 +13,7 @@ import { CAvatar } from '../../shared/c-avatar/c-avatar';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CDropdown } from '../../shared/c-dropdown/c-dropdown';
+import { delay, pipe } from 'rxjs';
 
 @Component({
   selector: 'app-list',
@@ -29,6 +30,8 @@ export default class List {
   cpyProducts = signal([] as ICreditCard[]);
   dataFilter = signal<string>('');
   viewData = signal<number>(5);
+  isLoading = signal<boolean>(false);
+  isDelete = signal<boolean>(false);
 
   total = computed(() => {
     return this.cpyProducts().length;
@@ -43,11 +46,16 @@ export default class List {
   }
 
   getProductos = () => {
-    this.swBancoService.getProductos().subscribe({
-      next: (res) => {
-        this.lstProductos.set(res.data);
-      },
-    });
+    this.isLoading.set(true);
+    this.swBancoService
+      .getProductos()
+      .pipe(delay(900))
+      .subscribe({
+        next: (res) => {
+          this.lstProductos.set(res.data);
+          this.isLoading.set(false);
+        },
+      });
   };
 
   search() {
@@ -71,7 +79,7 @@ export default class List {
           product.date_release.toString().includes(this.dataFilter())
       );
       this.cpyProducts.set(products.slice(0, this.viewData()));
-    }, 800);
+    }, 400);
   }
 
   newProduct() {
@@ -79,11 +87,16 @@ export default class List {
   }
 
   delete = (isDelete: boolean, product: ICreditCard) => {
+    this.isDelete.set(true);
     if (isDelete) {
       this.swBancoService.deleteProduct(product.id).subscribe({
         next: (res) => {
-          console.log(res);
+          this.isDelete.set(false);
+
           this.getProductos();
+        },
+        error: (error) => {
+          console.log('No se pudo guardar', error);
         },
       });
     }

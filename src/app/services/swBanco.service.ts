@@ -11,7 +11,6 @@ export class SwBancoService {
   SERVER: string = environment.SERVER_URL;
   private readonly _http = inject(HttpClient);
 
-  constructor() {}
 
   getProductos(): Observable<IResponse<ICreditCard[]>> {
     return this._http.get<IResponse<ICreditCard[]>>(

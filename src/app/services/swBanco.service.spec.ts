@@ -1,115 +1,267 @@
+import { TestBed } from '@angular/core/testing';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
 import { SwBancoService } from './swBanco.service';
-import { HttpClient } from '@angular/common/http';
-import { of } from 'rxjs';
 import { ICreditCard, IResponse } from '../interfaces/IProducts.interface';
 import { environment } from '../../environments/environment';
 
-jest.mock('@angular/common/http');
-
-describe('SwBancoService (Jest)', () => {
+describe('SwBancoService', () => {
   let service: SwBancoService;
-  let httpClientMock: jest.Mocked<HttpClient>;
-  const SERVER = environment.SERVER_URL;
+  let httpMock: HttpTestingController;
+  const baseUrl = environment.SERVER_URL;
+
+  // Mock data
+  const mockCreditCard: ICreditCard = {
+    id: '1',
+    name: 'Test Card',
+    description: 'Test Description',
+    logo: 'test-logo.png',
+    date_release: '2024-01-01',
+    date_revision: '2025-01-01',
+  };
+
+  const mockResponse: IResponse<ICreditCard[]> = {
+    data: [mockCreditCard],
+    message: 'Success',
+  };
+
+  const mockSingleResponse: IResponse<ICreditCard> = {
+    data: mockCreditCard,
+    message: 'Success',
+  };
 
   beforeEach(() => {
-    httpClientMock = {
-      get: jest.fn(),
-      post: jest.fn(),
-      put: jest.fn(),
-      delete: jest.fn(),
-    } as any;
-    service = new SwBancoService();
-    // @ts-ignore
-    service._http = httpClientMock;
-    service.SERVER = SERVER;
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [SwBancoService],
+    });
+
+    service = TestBed.inject(SwBancoService);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
-  it('debe obtener todos los productos', (done) => {
-    const mockResponse: IResponse<ICreditCard[]> = { data: [], message: 'ok' };
-    httpClientMock.get.mockReturnValue(of(mockResponse));
-    service.getProductos().subscribe((res) => {
-      expect(res).toEqual(mockResponse);
-      expect(httpClientMock.get).toHaveBeenCalledWith(`${SERVER}/bp/products`);
-      done();
+  afterEach(() => {
+    httpMock.verify();
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+
+  it('should have correct SERVER URL', () => {
+    expect(service.SERVER).toBe(environment.SERVER_URL);
+  });
+
+  describe('getProductos', () => {
+    it('should return an Observable<IResponse<ICreditCard[]>>', () => {
+      service.getProductos().subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+        expect(response.data).toHaveLength(1);
+        expect(response.data[0]).toEqual(mockCreditCard);
+      });
+
+      const req = httpMock.expectOne(`${baseUrl}/bp/products`);
+      expect(req.request.method).toBe('GET');
+      req.flush(mockResponse);
+    });
+
+    it('should handle error when getting products', () => {
+      const errorMessage = 'Error getting products';
+
+      service.getProductos().subscribe({
+        next: () => fail('should have failed with error'),
+        error: (error) => {
+          expect(error.status).toBe(500);
+        },
+      });
+
+      const req = httpMock.expectOne(`${baseUrl}/bp/products`);
+      req.flush(errorMessage, {
+        status: 500,
+        statusText: 'Internal Server Error',
+      });
     });
   });
 
-  it('debe obtener un producto por id', (done) => {
-    const mockResponse: IResponse<ICreditCard> = {
-      data: {} as ICreditCard,
-      message: 'ok',
-    };
-    httpClientMock.get.mockReturnValue(of(mockResponse));
-    service.getProduct('123').subscribe((res) => {
-      expect(res).toEqual(mockResponse);
-      expect(httpClientMock.get).toHaveBeenCalledWith(
-        `${SERVER}/bp/products/123`
-      );
-      done();
+  describe('getProduct', () => {
+    it('should return a single product by id', () => {
+      const productId = '1';
+
+      service.getProduct(productId).subscribe((product) => {
+        expect(product).toEqual(mockCreditCard);
+      });
+
+      const req = httpMock.expectOne(`${baseUrl}/bp/products/${productId}`);
+      expect(req.request.method).toBe('GET');
+      req.flush(mockCreditCard);
+    });
+
+    it('should handle error when getting single product', () => {
+      const productId = '999';
+
+      service.getProduct(productId).subscribe({
+        next: () => fail('should have failed with error'),
+        error: (error) => {
+          expect(error.status).toBe(404);
+        },
+      });
+
+      const req = httpMock.expectOne(`${baseUrl}/bp/products/${productId}`);
+      req.flush('Product not found', { status: 404, statusText: 'Not Found' });
     });
   });
 
-  it('debe validar un id', (done) => {
-    const mockResponse: IResponse<ICreditCard> = {
-      data: {} as ICreditCard,
-      message: 'ok',
-    };
-    httpClientMock.get.mockReturnValue(of(mockResponse));
-    service.validationId('123').subscribe((res) => {
-      expect(res).toEqual(mockResponse);
-      expect(httpClientMock.get).toHaveBeenCalledWith(
-        `${SERVER}/bp/products/verification/123`
+  describe('validationId', () => {
+    it('should validate product id', () => {
+      const productId = '1';
+
+      service.validationId(productId).subscribe((response) => {
+        expect(response).toEqual(mockSingleResponse);
+      });
+
+      const req = httpMock.expectOne(
+        `${baseUrl}/bp/products/verification/${productId}`
       );
-      done();
+      expect(req.request.method).toBe('GET');
+      req.flush(mockSingleResponse);
+    });
+
+    it('should handle validation error', () => {
+      const productId = 'invalid-id';
+
+      service.validationId(productId).subscribe({
+        next: () => fail('should have failed with error'),
+        error: (error) => {
+          expect(error.status).toBe(400);
+        },
+      });
+
+      const req = httpMock.expectOne(
+        `${baseUrl}/bp/products/verification/${productId}`
+      );
+      req.flush('Invalid ID', { status: 400, statusText: 'Bad Request' });
     });
   });
 
-  it('debe guardar un producto', (done) => {
-    const product = { id: '1' } as ICreditCard;
-    const mockResponse: IResponse<ICreditCard> = {
-      data: product,
-      message: 'ok',
-    };
-    httpClientMock.post.mockReturnValue(of(mockResponse));
-    service.saveProduct(product).subscribe((res) => {
-      expect(res).toEqual(mockResponse);
-      expect(httpClientMock.post).toHaveBeenCalledWith(
-        `${SERVER}/bp/products`,
-        product
-      );
-      done();
+  describe('saveProduct', () => {
+    it('should save a new product', () => {
+      service.saveProduct(mockCreditCard).subscribe((response) => {
+        expect(response).toEqual(mockSingleResponse);
+      });
+
+      const req = httpMock.expectOne(`${baseUrl}/bp/products`);
+      expect(req.request.method).toBe('POST');
+      expect(req.request.body).toEqual(mockCreditCard);
+      req.flush(mockSingleResponse);
+    });
+
+    it('should handle save error', () => {
+      service.saveProduct(mockCreditCard).subscribe({
+        next: () => fail('should have failed with error'),
+        error: (error) => {
+          expect(error.status).toBe(400);
+        },
+      });
+
+      const req = httpMock.expectOne(`${baseUrl}/bp/products`);
+      req.flush('Validation error', { status: 400, statusText: 'Bad Request' });
     });
   });
 
-  it('debe eliminar un producto', (done) => {
-    const mockResponse: IResponse<ICreditCard> = {
-      data: {} as ICreditCard,
-      message: 'ok',
-    };
-    httpClientMock.delete.mockReturnValue(of(mockResponse));
-    service.deleteProduct('1').subscribe((res) => {
-      expect(res).toEqual(mockResponse);
-      expect(httpClientMock.delete).toHaveBeenCalledWith(
-        `${SERVER}/bp/products/1`
-      );
-      done();
+  describe('deleteProduct', () => {
+    it('should delete a product by string id', () => {
+      const productId = '1';
+
+      service.deleteProduct(productId).subscribe((response) => {
+        expect(response).toEqual(mockSingleResponse);
+      });
+
+      const req = httpMock.expectOne(`${baseUrl}/bp/products/${productId}`);
+      expect(req.request.method).toBe('DELETE');
+      req.flush(mockSingleResponse);
+    });
+
+    it('should delete a product by number id', () => {
+      const productId = 1;
+
+      service.deleteProduct(productId).subscribe((response) => {
+        expect(response).toEqual(mockSingleResponse);
+      });
+
+      const req = httpMock.expectOne(`${baseUrl}/bp/products/${productId}`);
+      expect(req.request.method).toBe('DELETE');
+      req.flush(mockSingleResponse);
+    });
+
+    it('should handle delete error', () => {
+      const productId = '999';
+
+      service.deleteProduct(productId).subscribe({
+        next: () => fail('should have failed with error'),
+        error: (error) => {
+          expect(error.status).toBe(404);
+        },
+      });
+
+      const req = httpMock.expectOne(`${baseUrl}/bp/products/${productId}`);
+      req.flush('Product not found', { status: 404, statusText: 'Not Found' });
     });
   });
 
-  it('debe actualizar un producto', (done) => {
-    const product = { id: '1' } as ICreditCard;
-    const mockResponse: IResponse<ICreditCard> = {
-      data: product,
-      message: 'ok',
-    };
-    httpClientMock.put.mockReturnValue(of(mockResponse));
-    service.updateProduct(product).subscribe((res) => {
-      expect(res).toEqual(mockResponse);
-      expect(httpClientMock.put).toHaveBeenCalledWith(
-        `${SERVER}/bp/products/1`,
-        product
-      );
-      done();
+  describe('updateProduct', () => {
+    it('should update a product with string id', () => {
+      const productId = '1';
+      const updatedProduct = { ...mockCreditCard, name: 'Updated Card' };
+
+      service.updateProduct(productId, updatedProduct).subscribe((response) => {
+        expect(response).toEqual(mockSingleResponse);
+      });
+
+      const req = httpMock.expectOne(`${baseUrl}/bp/products/${productId}`);
+      expect(req.request.method).toBe('PUT');
+      expect(req.request.body).toEqual(updatedProduct);
+      req.flush(mockSingleResponse);
+    });
+
+    it('should update a product with number id', () => {
+      const productId = 1;
+      const updatedProduct = { ...mockCreditCard, name: 'Updated Card' };
+
+      service.updateProduct(productId, updatedProduct).subscribe((response) => {
+        expect(response).toEqual(mockSingleResponse);
+      });
+
+      const req = httpMock.expectOne(`${baseUrl}/bp/products/${productId}`);
+      expect(req.request.method).toBe('PUT');
+      expect(req.request.body).toEqual(updatedProduct);
+      req.flush(mockSingleResponse);
+    });
+
+    it('should handle update error', () => {
+      const productId = '999';
+      const updatedProduct = { ...mockCreditCard, name: 'Updated Card' };
+
+      service.updateProduct(productId, updatedProduct).subscribe({
+        next: () => fail('should have failed with error'),
+        error: (error) => {
+          expect(error.status).toBe(404);
+        },
+      });
+
+      const req = httpMock.expectOne(`${baseUrl}/bp/products/${productId}`);
+      req.flush('Product not found', { status: 404, statusText: 'Not Found' });
+    });
+  });
+
+  describe('HTTP Request Headers', () => {
+    it('should make requests with default headers', () => {
+      service.getProductos().subscribe();
+
+      const req = httpMock.expectOne(`${baseUrl}/bp/products`);
+      expect(req.request.headers.get('Content-Type')).toBe(null); // Default behavior
+      req.flush(mockResponse);
     });
   });
 });

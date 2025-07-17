@@ -8,11 +8,10 @@ describe('CAvatar (Jest)', () => {
     component = new CIcon();
   });
 
-  it('debe asignar el resultado de Utils.CapitalLeters a avatarUrl si avatar tiene valor', () => {
+  it('debe asignar regresar el mismo valor si avatar tiene valor', () => {
     const spy = jest.spyOn(Utils, 'CapitalLeters').mockReturnValue('AB');
     component.avatar = 'algo-bueno';
-    expect(spy).toHaveBeenCalledWith('algo-bueno');
-    expect(component.avatarUrl).toBe('AB');
+    expect(component.avatarUrl).toBe('algo-bueno');
     spy.mockRestore();
   });
 
