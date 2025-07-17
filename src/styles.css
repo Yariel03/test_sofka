@@ -1,1 +1,63 @@
 /* You can add global styles to this file, and also import other style files */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+  
+  .body-bg {
+    background-color: #f4f6f9;
+  }
+
+
+  
+.text-color {
+    color: #0c235a;
+  }
+  
+  .bg-primary {
+    background-color: #f5df66;
+  }
+  .bg-secundary {
+    background-color: #eaecf2;
+  }
+  
+  .bg-error {
+    background-color: #f5e06677;
+    color: #0c235a91;
+  }
+  
+  .input-error {
+    border: 1px solid #f44336;
+  }
+  
+  .error {
+    color: #f44336;
+  }
+
+
+  
+.input {
+    width: 100%;
+    padding: 11px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .input:focus {
+    outline: none;
+    border-color: #0c235a83;
+  }
+  
+  .button {
+    width: 100%;
+    padding: 20px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+  
+    font-weight: bold;
+    cursor: pointer;
+  }
+

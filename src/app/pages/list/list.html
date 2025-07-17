@@ -1,0 +1,35 @@
+<div class="container">
+    <div class="container-table">
+    <div class="card">
+        <table class="table">
+            <thead class="thead">
+                <td>Logo</td>
+                <td>Nombre del producto</td>
+                <td>Descripcion</td>
+                <td>Fecha de liberacion</td>
+                <td>Fecha de reestruccturacion</td>
+                <td></td>
+            </thead>
+            <tbody>
+                
+                @for( product of lstProductos() ;track product.id){
+                    <tr>
+                        <td> 
+                            
+                            <c-avatar class="avatar" [avatar]="product.logo" />
+                            
+                        </td>
+                        <td>{{product.name}}</td>
+                        <td>{{product.description}}</td>
+                        <td>{{product.date_release}}</td>
+                        <td>{{product.date_revision}}</td>
+                        <td></td>
+                        
+                    </tr>
+                }
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+</div>
