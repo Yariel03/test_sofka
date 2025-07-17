@@ -1,0 +1,48 @@
+.dropdown {
+    position: relative;
+    display: inline-block;
+    z-index: 1000; /* <-- Cambiado aquí */
+
+  }
+
+  /* Botón del dropdown */
+  .dropdown-button {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  /* Menú oculto inicialmente */
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    top:-6px;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    z-index: 1000; /* <-- Cambiado aquí */
+    border-radius: 4px;
+  }
+
+  /* Opciones del menú */
+  .dropdown-content a {
+    color: black;
+    padding: 10px 15px;
+    text-decoration: none;
+    display: block;
+  }
+
+  .dropdown-content a:hover {
+    background-color: #ddd;
+  }
+
+  /* Mostrar el menú cuando el usuario pasa el mouse */
+  .dropdown-content {
+    display: block;
+  }
+
+  a{cursor: pointer;}

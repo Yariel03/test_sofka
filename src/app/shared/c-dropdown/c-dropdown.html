@@ -1,0 +1,14 @@
+
+
+<div class="dropdown">
+    <div class="button vertical" (click)="toggleMenu()">•••</div>
+    @if(showMenu){
+
+        <div class="dropdown-content">
+            <a routerLink="/new/{{producto().id}}">Editar</a>
+            <a (click)="openModal()">Eliminar</a>
+        </div>
+    }
+    </div>
+
+    <app-c-modal [abrir]="this.stateModal" (isDelete)="closeModal($event)" [producto]="producto()"></app-c-modal>

@@ -19,10 +19,8 @@ export class SwBancoService {
     );
   }
 
-  getProduct(id: string): Observable<IResponse<ICreditCard>> {
-    return this._http.get<IResponse<ICreditCard>>(
-      `${this.SERVER}/bp/products/${id}`
-    );
+  getProduct(id: string): Observable<ICreditCard> {
+    return this._http.get<ICreditCard>(`${this.SERVER}/bp/products/${id}`);
   }
 
   validationId(id: string): Observable<IResponse<ICreditCard>> {
@@ -37,15 +35,18 @@ export class SwBancoService {
     );
   }
 
-  deleteProduct(id: string): Observable<IResponse<ICreditCard>> {
+  deleteProduct(id: string | number): Observable<IResponse<ICreditCard>> {
     return this._http.delete<IResponse<ICreditCard>>(
       `${this.SERVER}/bp/products/${id}`
     );
   }
 
-  updateProduct(product: ICreditCard): Observable<IResponse<ICreditCard>> {
+  updateProduct(
+    id: string | number,
+    product: ICreditCard
+  ): Observable<IResponse<ICreditCard>> {
     return this._http.put<IResponse<ICreditCard>>(
-      `${this.SERVER}/bp/products/${product.id}`,
+      `${this.SERVER}/bp/products/${id}`,
       product
     );
   }

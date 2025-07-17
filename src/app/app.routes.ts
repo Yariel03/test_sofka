@@ -11,6 +11,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/list/list'),
   },
   {
+    path: 'new/:id',
+    loadComponent: () => import('./pages/new/new'),
+  },
+  {
     path: '**',
     redirectTo: 'list',
   },

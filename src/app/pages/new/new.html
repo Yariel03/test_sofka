@@ -1,1 +1,132 @@
-<p>new works!</p>
+<div class="container">
+
+    <div class="card">
+        <div class="head">
+            <h1 class="text-color">Formulario de Registro</h1>
+          </div>
+          <hr />
+
+          <form [formGroup]="frmProduct" (submit)="save()">
+            <div class="form">
+              <div>
+                <label for="">ID</label>
+                <input
+                  [class]="{
+                    'input-error': frmProduct.get('id')?.invalid,
+                    'input-succes': frmProduct.get('id')?.valid
+                  }"
+                  class="input"
+                  formControlName="id"
+                  type="text"
+                  (keydown)="idValidation()"
+                />
+                @if(frmProduct.get('id')?.errors?.['required']){
+                <div class="error">Este campo es requerido</div>
+                } @if(frmProduct.get('id')?.errors?.['minlength']){
+                <div class="error">minimo 3 caracters</div>
+                } @if(frmProduct.get('id')?.errors?.['maxlength']){
+                <div class="error">maximo 10 caracters</div>
+                } @if(isExist()){
+                <div class="error">Este ID ya existe</div>
+                }
+              </div>
+              <div>
+                <label for="">Nombre</label>
+                <input
+                  class="input"
+                  formControlName="name"
+                  type="text"
+                  [class]="{
+                    'input-error': frmProduct.get('name')?.invalid,
+                    'input-succes': frmProduct.get('name')?.valid
+                  }"
+                />
+                @if(frmProduct.get('name')?.errors?.['required']){
+                <div class="error">Este campo es requerido</div>
+                } @if(frmProduct.get('name')?.errors?.['minlength']){
+                <div class="error">minimo 3 caracters</div>
+                } @if(frmProduct.get('name')?.errors?.['maxlength']){
+                <div class="error">maximo 100 caracters</div>
+                }
+              </div>
+              <div>
+                <label for="">Descripción</label>
+                <input
+                  [class]="{
+                    'input-error': frmProduct.get('description')?.invalid,
+                    'input-succes': frmProduct.get('description')?.valid
+                  }"
+                  class="input"
+                  formControlName="description"
+                  type="text"
+                />
+                @if(frmProduct.get('description')?.invalid){
+                <div class="error">Este campo es requerido</div>
+                }
+              </div>
+              <div>
+                <label for="">Logo</label>
+                <input
+                  [class]="{
+                    'input-error': frmProduct.get('logo')?.invalid,
+                    'input-succes': frmProduct.get('logo')?.valid
+                  }"
+                  class="input"
+                  formControlName="logo"
+                  type="text"
+                />
+                @if(frmProduct.get('logo')?.invalid){
+                <div class="error">Este campo es requerido</div>
+                }
+              </div>
+              <div>
+                <label for="">Fecha de liberacion</label>
+                <input
+                  [class]="{
+                    'input-error': frmProduct.get('date_release')?.invalid,
+                    'input-succes': frmProduct.get('data_release')?.valid
+                  }"
+                  class="input"
+                  formControlName="date_release"
+                  type="date"
+                  (change)="dateValidation()"
+                />
+                @if(frmProduct.get('date_release')?.invalid){
+                <div class="error">Este campo es requerido</div>
+                }
+              </div>
+              <div>
+                <label for="">Fecha Revisión</label>
+                <input
+                  readonly
+                  class="input"
+                  formControlName="date_revision"
+                  type="date"
+                />
+              </div>
+            </div>
+            <div class="button-group">
+              <div>
+                <button
+                  class="button bg-secundary text-color"
+                  type="button"
+                  (click)="restartFrm()"
+                >
+                  Reiniciar
+                </button>
+              </div>
+              <div>
+                <button
+                  class="button bg-primary text-color"
+                  type="submit"
+                  [disabled]="frmProduct.invalid"
+                  [class]="{ 'bg-error': frmProduct.invalid }"
+                >
+                  Enviar
+                </button>
+              </div>
+            </div>
+          </form>
+<!-- ----------------------- -->
+    </div>
+</div>

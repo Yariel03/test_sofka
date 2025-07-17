@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { Utils } from '../../utils/utils';
 
 @Component({
   selector: 'c-icon',

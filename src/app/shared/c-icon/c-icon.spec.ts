@@ -1,11 +1,11 @@
-import { CAvatar } from './c-icon';
+import { CIcon } from './c-icon';
 import { Utils } from '../../utils/utils';
 
 describe('CAvatar (Jest)', () => {
-  let component: CAvatar;
+  let component: CIcon;
 
   beforeEach(() => {
-    component = new CAvatar();
+    component = new CIcon();
   });
 
   it('debe asignar el resultado de Utils.CapitalLeters a avatarUrl si avatar tiene valor', () => {

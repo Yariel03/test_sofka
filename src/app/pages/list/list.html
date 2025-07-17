@@ -13,6 +13,7 @@
           <button
             class="button bg-primary text-color"
             type="button"
+            (click)="newProduct()"
           >
             Agregar
           </button>
@@ -58,7 +59,9 @@
                         <td>{{product.description}}</td>
                         <td>{{product.date_release}}</td>
                         <td>{{product.date_revision}}</td>
-                        <td> <div class="button vertical">•••</div></td>
+                        <td> <app-c-dropdown (isDelete)="delete($event,product)" [producto]="product" /> 
+                            <!-- <div class="button vertical">•••</div> -->
+                        </td>
                         
                     </tr>
                 }@empty {
@@ -90,3 +93,4 @@
     </div>
 
 </div>
+
